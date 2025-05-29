@@ -45,8 +45,8 @@ wget https://github.com/AssetRipper/AssetRipper/releases/latest/download/AssetRi
 unzip AssetRipper_linux_x64.zip -d AssetRipper
 
 # 4. Extract APK
-chmod +x main.sh
-./main.sh com.awesomepiece.castle
+chmod +x install.sh
+./install.sh com.awesomepiece.castle
 
 # 5. Analyze with AssetRipper
 ./AssetRipper/AssetRipper
@@ -134,13 +134,13 @@ unzip AssetRipper_mac.zip -d AssetRipper
 
 ```bash
 # Standard extraction
-./main.sh com.awesomepiece.castle
+./install.sh com.awesomepiece.castle
 
 # Custom output directory
-./main.sh com.awesomepiece.castle ./my_analysis
+./install.sh com.awesomepiece.castle ./my_analysis
 
 # Different APK source
-./main.sh com.awesomepiece.castle ./output google-play
+./install.sh com.awesomepiece.castle ./output google-play
 ```
 
 ### Script Parameters
@@ -208,7 +208,7 @@ PACKAGE="com.awesomepiece.castle"
 OUTPUT_DIR="./analysis_$(date +%Y%m%d_%H%M%S)"
 
 # Extract APK
-./main.sh "$PACKAGE" "$OUTPUT_DIR"
+./install.sh "$PACKAGE" "$OUTPUT_DIR"
 
 # Analyze with AssetRipper
 ./AssetRipper/AssetRipper "$OUTPUT_DIR/${PACKAGE}_extracted/base_assets/" -o "$OUTPUT_DIR/unity_assets/"
@@ -233,7 +233,7 @@ echo "Analysis complete! Results in $OUTPUT_DIR"
 ### Permission Issues
 
 ```bash
-chmod +x main.sh                    # Fix script permissions
+chmod +x install.sh                    # Fix script permissions
 chmod 755 ./extracted/              # Fix directory permissions
 ```
 
@@ -261,7 +261,7 @@ export TMPDIR=/var/tmp              # Use different temp directory
 
 ```bash
 # Low-end systems
-nice -n 19 ./main.sh com.awesomepiece.castle
+nice -n 19 ./install.sh com.awesomepiece.castle
 ulimit -v 2097152                   # 2GB memory limit
 
 # High-end systems
@@ -273,7 +273,7 @@ mkdir /tmp/fast_extraction && export TMPDIR=/tmp/fast_extraction
 
 ```bash
 export DEBUG=1
-bash -x ./main.sh com.awesomepiece.castle 2>&1 | tee debug.log
+bash -x ./install.sh com.awesomepiece.castle 2>&1 | tee debug.log
 ```
 
 ## Legal Notice
