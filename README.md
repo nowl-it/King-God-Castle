@@ -2,6 +2,36 @@
 
 A comprehensive Unix toolkit for downloading, extracting, and analyzing the "King God Castle" (킹갓캐슬) mobile game APK files. This project provides professional-grade tools for reverse engineering and examining Unity-based mobile games with extensive support for Linux, macOS, and BSD systems.
 
+## 📋 Table of Contents
+
+- [About King God Castle](#-about-king-god-castle)
+- [Features](#-features)
+- [Prerequisites & Installation](#️-prerequisites--installation)
+  - [Linux Distributions](#-linux-distributions)
+    - [Ubuntu/Debian](#ubuntudebian)
+    - [Fedora/RHEL/CentOS](#fedorarhel/centos)
+    - [Arch Linux/Manjaro](#arch-linuxmanjaro)
+    - [openSUSE](#opensuse)
+  - [macOS](#-macos)
+- [Tool Installation](#-tool-installation)
+  - [APKeep Installation](#apkeep-installation)
+  - [AssetRipper Installation](#assetripper-installation)
+  - [Distribution-Specific Setup](#distribution-specific-setup)
+- [Usage Guide](#-usage-guide)
+  - [Quick Start - Step-by-Step Workflow](#-quick-start---step-by-step-workflow)
+  - [Advanced Usage](#-advanced-usage)
+  - [Parameters & Configuration](#-parameters--configuration)
+  - [Post-Extraction Analysis](#-post-extraction-analysis-linux-focus)
+  - [Advanced Linux Workflows](#-advanced-linux-workflows)
+- [Script Workflow Breakdown](#️-script-workflow-breakdown)
+- [Game Information & Technical Details](#-game-information--technical-details)
+- [Advanced Analysis Capabilities](#-advanced-analysis-capabilities)
+- [Legal & Ethical Guidelines](#️-legal--ethical-guidelines)
+- [Contributing & Development](#-contributing--development)
+- [License](#-license)
+- [Troubleshooting & Support](#-troubleshooting--support)
+- [Support Channels](#-support-channels)
+
 ## 📱 About King God Castle
 
 **King God Castle** is a Unity-based mobile game developed by AwesomePiece with the package name `com.awesomepiece.castle`. The game is available in multiple languages and regions, with different localized names:
@@ -193,7 +223,9 @@ chmod +x assetripper/AssetRipper
 ln -sf $(pwd)/assetripper/AssetRipper /usr/local/bin/assetripper
 ```
 
-#### Ubuntu/Debian and Derivatives
+#### Distribution-Specific Setup
+
+##### Ubuntu/Debian and Derivatives
 
 ```bash
 # Update package lists
@@ -206,7 +238,7 @@ sudo apt install -y unzip curl wget build-essential git
 sudo apt install -y vim nano tree htop
 ```
 
-#### Red Hat/CentOS/Fedora/Rocky Linux
+##### Red Hat/CentOS/Fedora/Rocky Linux
 
 ```bash
 # For RHEL/CentOS 8+/Rocky Linux
@@ -222,7 +254,7 @@ sudo dnf update -y
 sudo dnf install -y unzip curl wget git gcc gcc-c++ make
 ```
 
-#### Arch Linux/Manjaro
+##### Arch Linux/Manjaro
 
 ```bash
 # Update system
@@ -236,7 +268,7 @@ git clone https://aur.archlinux.org/yay.git
 cd yay && makepkg -si
 ```
 
-#### openSUSE (Leap/Tumbleweed)
+##### openSUSE (Leap/Tumbleweed)
 
 ```bash
 # Update system
@@ -249,7 +281,7 @@ sudo zypper install -y unzip curl wget git gcc gcc-c++ make
 sudo zypper install -t pattern devel_basis
 ```
 
-#### Alpine Linux
+##### Alpine Linux
 
 ```bash
 # Update package index
@@ -262,7 +294,7 @@ sudo apk add unzip curl wget git build-base bash
 sudo apk add vim nano tree htop
 ```
 
-#### Gentoo Linux
+##### Gentoo Linux
 
 ```bash
 # Update portage tree
@@ -275,7 +307,7 @@ sudo emerge -av app-arch/unzip net-misc/curl net-misc/wget dev-vcs/git
 sudo emerge -av sys-devel/gcc sys-devel/make
 ```
 
-#### NixOS
+##### NixOS
 
 ```bash
 # Install packages temporarily
@@ -547,7 +579,7 @@ top & ./main.sh com.awesomepiece.castle
 
 ```bash
 # Install dependencies using pkg_add
-doas pkg_add curl wget unzip git bash
+doas pkg_add curl wget unzip git
 
 # Execute with bash (if default shell is ksh)
 bash ./main.sh com.awesomepiece.castle
