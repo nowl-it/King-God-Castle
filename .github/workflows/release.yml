@@ -1,0 +1,116 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - "v*" # Triggers on branches like v1.0.0, v2.1.3, etc.
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch full history for changelog generation
+
+      - name: Extract version from branch name
+        id: version
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          VERSION=${BRANCH_NAME#v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "branch=${BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Check if tag already exists
+        id: tag_check
+        run: |
+          if git rev-parse "refs/tags/${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Exit if tag exists
+        if: steps.tag_check.outputs.exists == 'true'
+        run: |
+          echo "Tag ${{ steps.version.outputs.tag }} already exists. Skipping release creation."
+          exit 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the latest tag (if any)
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LATEST_TAG" ]; then
+            # If no previous tags, get all commits
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --reverse)
+          else
+            # Get commits since the latest tag
+            CHANGELOG=$(git log ${LATEST_TAG}..HEAD --pretty=format:"- %s (%h)" --reverse)
+          fi
+
+          # Save changelog to file for multiline output
+          cat > changelog.md << 'EOF'
+          ## What's Changed
+
+          ${CHANGELOG}
+
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${LATEST_TAG}...${{ steps.version.outputs.tag }}
+          EOF
+
+          # Handle case where there are no commits
+          if [ -z "$CHANGELOG" ]; then
+            echo "No new commits since last release." > changelog.md
+          fi
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.tag }}" -m "Release ${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
+
+      - name: Create release archive
+        run: |
+          # Create a clean archive of the project
+          mkdir -p dist
+
+          # Create source archive excluding .git and other unnecessary files
+          tar -czf "dist/kgc-toolkit-${{ steps.version.outputs.version }}.tar.gz" \
+            --exclude='.git*' \
+            --exclude='dist' \
+            --exclude='.github' \
+            --exclude='*.tmp' \
+            --exclude='*.log' \
+            .
+            
+          # Create zip archive as well
+          zip -r "dist/kgc-toolkit-${{ steps.version.outputs.version }}.zip" \
+            . \
+            -x '.git*' 'dist/*' '.github/*' '*.tmp' '*.log'
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: "KGC Toolkit ${{ steps.version.outputs.version }}"
+          body_path: changelog.md
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') || contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'rc') }}
+          files: |
+            dist/kgc-toolkit-${{ steps.version.outputs.version }}.tar.gz
+            dist/kgc-toolkit-${{ steps.version.outputs.version }}.zip
+            install.sh
+
+      - name: Update installation documentation
+        if: success()
+        run: |
+          echo "✅ Release ${{ steps.version.outputs.tag }} created successfully!"
+          echo "📦 Archives available at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.tag }}"
+          echo "📋 Installation command: curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/${{ steps.version.outputs.tag }}/install.sh | bash"

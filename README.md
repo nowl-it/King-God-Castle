@@ -276,6 +276,41 @@ export DEBUG=1
 bash -x ./install.sh com.awesomepiece.castle 2>&1 | tee debug.log
 ```
 
+## Development
+
+### Release Process
+
+This project uses automated releases via GitHub Actions. See [Release Process Documentation](docs/RELEASE_PROCESS.md) for detailed information.
+
+#### Quick Release Creation
+
+```bash
+# Using the helper script
+./scripts/create-release.sh 1.2.3
+
+# Manual method
+git checkout -b v1.2.3
+git push -u origin v1.2.3
+```
+
+#### Version Naming
+
+Follow [Semantic Versioning](https://semver.org/):
+
+- `v1.2.3` - Stable release
+- `v2.0.0-beta.1` - Pre-release
+- `v1.1.1-rc.2` - Release candidate
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'feat: add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+For releases, create a version branch (`v*`) to trigger automated release creation.
+
 ## Legal Notice
 
 **Educational Use Only** - This tool is designed for legitimate research and educational purposes:
