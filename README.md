@@ -1,54 +1,53 @@
-# KGC - King God Castle APK Analysis Toolkit
+# King God Castle APK Analysis Toolkit
 
-A professional Unix toolkit for extracting and analyzing the Unity-based mobile game "King God Castle" (킹갓캐슬). Designed for security researchers, reverse engineers, and game developers working on Linux, macOS, and BSD systems.
+A comprehensive toolkit for extracting and analyzing the Unity-based mobile game "King God Castle" (킹갓캐슬). Designed for security researchers, reverse engineers, and game developers working on Unix-based systems.
 
 ## 📋 Table of Contents
 
-- [About](#about)
+- [Overview](#overview)
 - [Features](#features)
-- [Quick Start](#quick-start)
+- [Quick Start Guide](#quick-start-guide)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Usage Instructions](#usage-instructions)
 - [Analysis Tools](#analysis-tools)
 - [Troubleshooting](#troubleshooting)
 - [Legal Notice](#legal-notice)
 
-## About
+## Overview
 
-**King God Castle** (`com.awesomepiece.castle`) is a Unity 2022.3+ mobile game by AwesomePiece. This toolkit enables comprehensive analysis of its assets, code structure, and security mechanisms for educational and research purposes.
+**King God Castle** (`com.awesomepiece.castle`) is a Unity 2022.3+ mobile game developed by AwesomePiece. This toolkit facilitates in-depth analysis of its assets, code structure, and security mechanisms for educational and research purposes.
 
 **Supported Platforms:** Linux, macOS, FreeBSD, OpenBSD, NetBSD
 
 ## Features
 
-- **Automated APK Download** - Uses `apkeep` for APK-Pure downloads
-- **XAPK Extraction** - Handles split APK archives seamlessly
-- **Unity Asset Analysis** - Deep inspection with AssetRipper integration
-- **Security Research** - Anti-cheat detection and obfuscation analysis
-- **Cross-Platform** - Native Unix shell scripts for all platforms
+- **Automated APK Download**: Utilizes `apkeep` for APK-Pure downloads.
+- **XAPK Extraction**: Seamlessly handles split APK archives.
+- **Unity Asset Analysis**: Integrates with AssetRipper for deep inspection.
+- **Security Research**: Includes tools for anti-cheat detection and obfuscation analysis.
+- **Cross-Platform Compatibility**: Native Unix shell scripts for all supported platforms.
 
-## Quick Start
+## Quick Start Guide
 
 ```bash
-# 1. Install dependencies
-sudo apt install curl wget unzip git  # Ubuntu/Debian
-# or
-brew install curl wget unzip git      # macOS
+# Step 1: Install dependencies
+sudo apt install curl wget unzip git  # For Ubuntu/Debian
+brew install curl wget unzip git      # For macOS
 
-# 2. Clone repository
+# Step 2: Clone the repository
 git clone https://github.com/nowl-it/King-God-Castle.git
 cd King-God-Castle
 
-# 3. Install tools
+# Step 3: Install required tools
 curl -sSL https://raw.githubusercontent.com/EFForg/apkeep/main/install.sh | bash
 wget https://github.com/AssetRipper/AssetRipper/releases/latest/download/AssetRipper_linux_x64.zip
 unzip AssetRipper_linux_x64.zip -d AssetRipper
 
-# 4. Extract APK
+# Step 4: Extract APK
 chmod +x install.sh
 ./install.sh
 
-# 5. Analyze with AssetRipper
+# Step 5: Analyze assets with AssetRipper
 ./AssetRipper/AssetRipper
 # File → Load folder → Select: ./com.awesomepiece.castle_extracted/base_assets/
 # Export → Export all files → Choose destination
@@ -107,17 +106,17 @@ fi
 #### AssetRipper (Unity Asset Extractor)
 
 ```bash
-# Method 1: Direct download (Linux)
+# Direct download (Linux)
 wget https://github.com/AssetRipper/AssetRipper/releases/latest/download/AssetRipper_linux_x64.zip
 unzip AssetRipper_linux_x64.zip -d AssetRipper
 chmod +x AssetRipper/AssetRipper
 
-# Method 2: AUR package (Arch Linux)
+# AUR package (Arch Linux)
 yay -S asset-ripper-bin
 # or
 paru -S asset-ripper-bin
 
-# Method 3: Build from source
+# Build from source
 git clone https://github.com/AssetRipper/AssetRipper.git
 cd AssetRipper
 dotnet build -c Release
@@ -128,9 +127,9 @@ curl -L -o AssetRipper_mac.zip https://github.com/AssetRipper/AssetRipper/releas
 unzip AssetRipper_mac.zip -d AssetRipper
 ```
 
-## Usage
+## Usage Instructions
 
-**Note:** The script automatically downloads from APK-Pure - no package name or source selection needed. The package `com.awesomepiece.castle` is hardcoded for Knight's Game Castle.
+**Note:** The script automatically downloads from APK-Pure. The package `com.awesomepiece.castle` is hardcoded for King God Castle.
 
 ### Basic Extraction
 
@@ -176,7 +175,6 @@ export DEBUG=1                      # Debug mode
 2. **Load Assets**: File → Load folder → `./com.awesomepiece.castle_extracted/base_assets/`
 3. **Export Project**: Export → Export all files → Choose format:
    - **Unity Project** - Complete Unity project
-   - **YAML** - Human-readable format
    - **Native** - Original asset format
 
 ## Analysis Tools
@@ -343,3 +341,5 @@ For releases, create a version branch (`v*`) to trigger automated release creati
 ---
 
 **License:** MIT | **Support:** [GitHub Issues](https://github.com/nowl-it/King-God-Castle/issues) | **Documentation:** [AssetRipper](https://github.com/AssetRipper/AssetRipper) • [APKeep](https://github.com/EFForg/apkeep)
+
+Anh em mình cứ vậy thôi hẹ hẹ

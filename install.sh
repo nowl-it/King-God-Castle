@@ -79,12 +79,10 @@ check_dependencies() {
         echo "Installation instructions:"
         if [[ "${missing_deps[*]}" =~ "apkeep" ]]; then
             echo "  apkeep:"
-            echo "    - Termux: pkg install apkeep"
             echo "    - Linux: https://github.com/EFForg/apkeep"
         fi
         if [[ "${missing_deps[*]}" =~ "unzip" ]]; then
             echo "  unzip:"
-            echo "    - Termux: pkg install unzip"
             echo "    - Ubuntu/Debian: sudo apt install unzip"
             echo "    - RHEL/CentOS: sudo yum install unzip"
         fi
@@ -109,21 +107,10 @@ create_directory() {
 
 download_apk() {
     local output_dir="$1"
-
-    log_info "Downloading APK for $PACKAGE_NAME from apk-pure..."
-
-    if ! apkeep -a "$PACKAGE_NAME" -d "apk-pure" "$output_dir"; then
-        log_error "Failed to download APK from apk-pure"
-        exit 1
-    fi
-
     local apk_file="$output_dir/${PACKAGE_NAME}.xapk"
-    if [ ! -f "$apk_file" ]; then
-        log_error "APK file not found after download: $apk_file"
-        exit 1
-    fi
 
-    log_success "APK downloaded successfully to $output_dir"
+    apkeep -a "$PACKAGE_NAME" -d apk-pure "$output_dir"
+    
     echo "$apk_file"
 }
 
@@ -208,6 +195,10 @@ main() {
     local output_dir
     local verbose=false
     local quiet=false
+    local apk_file
+    local extract_dir
+    local has_base_assets=false
+    local has_config=false
 
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do
@@ -250,36 +241,40 @@ main() {
         exec 1>/dev/null
     fi
 
-    log_info "Starting APK download and extraction process"
+    # Check dependencies
+    echo "--- Checking dependencies ---"
+    check_dependencies
+
+    echo "--- Starting APK download and extraction process ---"
     log_info "Package: $PACKAGE_NAME"
     log_info "Output directory: $output_dir"
     log_info "Source: apk-pure"
 
-    # Check dependencies
-    check_dependencies
-
     # Create output directory
+    echo "--- Checking output directory: $output_dir  ---"
     create_directory "$output_dir" "output"
 
     # Download APK
-    local apk_file
+    echo "--- Downloading APK ---"
     apk_file=$(download_apk "$output_dir")
+    log_success "APK downloaded successfully: $apk_file"
 
     # Set up extraction directory
-    local extract_dir="$output_dir/${PACKAGE_NAME}_extracted"
+    echo "--- Setting up extraction directory ---"
+    extract_dir="$output_dir/${PACKAGE_NAME}_extracted"
     create_directory "$extract_dir" "extraction"
 
     # Extract main APK
+    echo "--- Extracting main APK ---"
+    log_info "Extracting main APK from $apk_file to $extract_dir"
     extract_archive "$apk_file" "$extract_dir" "main XAPK"
 
     # Process base assets
-    local has_base_assets=false
     if process_base_assets "$extract_dir"; then
         has_base_assets=true
     fi
 
     # Process config APKs
-    local has_config=false
     if process_config_apks "$extract_dir"; then
         has_config=true
     fi
@@ -290,7 +285,7 @@ main() {
     fi
 
     # Final summary
-    echo
+    echo "--- Summary ---"
     log_success "APK extraction and processing completed successfully!"
     log_info "Files location: $output_dir"
     log_info "Extracted content: $extract_dir"
