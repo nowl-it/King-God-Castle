@@ -21,7 +21,7 @@ A professional Unix toolkit for extracting and analyzing the Unity-based mobile 
 
 ## Features
 
-- **Automated APK Download** - Uses `apkeep` for multi-source downloads
+- **Automated APK Download** - Uses `apkeep` for APK-Pure downloads
 - **XAPK Extraction** - Handles split APK archives seamlessly
 - **Unity Asset Analysis** - Deep inspection with AssetRipper integration
 - **Security Research** - Anti-cheat detection and obfuscation analysis
@@ -46,7 +46,7 @@ unzip AssetRipper_linux_x64.zip -d AssetRipper
 
 # 4. Extract APK
 chmod +x install.sh
-./install.sh com.awesomepiece.castle
+./install.sh
 
 # 5. Analyze with AssetRipper
 ./AssetRipper/AssetRipper
@@ -130,26 +130,37 @@ unzip AssetRipper_mac.zip -d AssetRipper
 
 ## Usage
 
+**Note:** The script automatically downloads from APK-Pure - no package name or source selection needed. The package `com.awesomepiece.castle` is hardcoded for Knight's Game Castle.
+
 ### Basic Extraction
 
 ```bash
-# Standard extraction
-./install.sh com.awesomepiece.castle
+# Standard extraction to current directory
+./install.sh
 
 # Custom output directory
-./install.sh com.awesomepiece.castle ./my_analysis
+./install.sh ./my_analysis
 
-# Different APK source
-./install.sh com.awesomepiece.castle ./output google-play
+# Verbose output
+./install.sh -v ./analysis
+
+# Quiet mode (only errors)
+./install.sh -q ./output
 ```
 
 ### Script Parameters
 
-| Parameter      | Required | Description        | Default    | Example                   |
-| -------------- | -------- | ------------------ | ---------- | ------------------------- |
-| `package_name` | Yes      | Android package ID | -          | `com.awesomepiece.castle` |
-| `output_dir`   | No       | Extraction path    | `$(pwd)`   | `./analysis`              |
-| `source`       | No       | Download source    | `apk-pure` | `google-play`             |
+| Parameter    | Required | Description     | Default  | Example      |
+| ------------ | -------- | --------------- | -------- | ------------ |
+| `output_dir` | No       | Extraction path | `$(pwd)` | `./analysis` |
+
+### Script Options
+
+| Option          | Description                                         |
+| --------------- | --------------------------------------------------- |
+| `-h, --help`    | Show help message and usage information             |
+| `-v, --verbose` | Enable verbose output with directory structure info |
+| `-q, --quiet`   | Suppress all output except errors                   |
 
 ### Environment Variables
 
@@ -208,7 +219,7 @@ PACKAGE="com.awesomepiece.castle"
 OUTPUT_DIR="./analysis_$(date +%Y%m%d_%H%M%S)"
 
 # Extract APK
-./install.sh "$PACKAGE" "$OUTPUT_DIR"
+./install.sh "$OUTPUT_DIR"
 
 # Analyze with AssetRipper
 ./AssetRipper/AssetRipper "$OUTPUT_DIR/${PACKAGE}_extracted/base_assets/" -o "$OUTPUT_DIR/unity_assets/"
@@ -261,7 +272,7 @@ export TMPDIR=/var/tmp              # Use different temp directory
 
 ```bash
 # Low-end systems
-nice -n 19 ./install.sh com.awesomepiece.castle
+nice -n 19 ./install.sh ./output
 ulimit -v 2097152                   # 2GB memory limit
 
 # High-end systems
@@ -273,7 +284,7 @@ mkdir /tmp/fast_extraction && export TMPDIR=/tmp/fast_extraction
 
 ```bash
 export DEBUG=1
-bash -x ./install.sh com.awesomepiece.castle 2>&1 | tee debug.log
+bash -x ./install.sh ./output 2>&1 | tee debug.log
 ```
 
 ## Development
